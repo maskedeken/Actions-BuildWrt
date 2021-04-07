@@ -1,0 +1,22 @@
+diff -ur a/package/feeds/luci/luci-mod-admin-full/luasrc/model/cbi/admin_system/fstab.lua b/package/feeds/luci/luci-mod-admin-full/luasrc/model/cbi/admin_system/fstab.lua
+--- a/package/feeds/luci/luci-mod-admin-full/luasrc/model/cbi/admin_system/fstab.lua	2021-04-06 21:28:06.147378739 -0400
++++ b/package/feeds/luci/luci-mod-admin-full/luasrc/model/cbi/admin_system/fstab.lua	2021-04-06 21:30:10.900789951 -0400
+@@ -117,12 +117,13 @@
+ end
+ 
+ unmount = v:option(Button, "unmount", translate("Unmount"))
++unmount.cfgvalue = function(self, section)
++	return non_system_mounts[section].umount
++end
+ unmount.render = function(self, section, scope)
+-	if non_system_mounts[section].umount then
+-		self.title = translate("Unmount")
+-		self.inputstyle = "remove"
+-        	Button.render(self, section, scope)
+-	end
++	self.title = translate("Unmount")
++	self.inputstyle = "remove"
++	Button.render(self, section, scope)
+ end
+ 
+ unmount.write = function(self, section)
