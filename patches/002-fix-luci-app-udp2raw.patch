@@ -1,0 +1,17 @@
+diff -ur a/package/feeds/luci/luci-app-udp2raw/luasrc/view/udp2raw/status.htm b/package/feeds/luci/luci-app-udp2raw/luasrc/view/udp2raw/status.htm
+--- a/package/feeds/luci/luci-app-udp2raw/luasrc/view/udp2raw/status.htm	2021-04-08 05:10:34.113054050 -0400
++++ b/package/feeds/luci/luci-app-udp2raw/luasrc/view/udp2raw/status.htm	2021-04-08 05:11:10.743882421 -0400
+@@ -1,3 +1,13 @@
++<%
++local function get_udp2raw_version(name)
++	local info = luci.util.split(luci.sys.exec("%s -h 2>/dev/null" %{name}), "\n")
++	local version = string.match(info[2], "git version:(%w+)")
++	local build = string.match(info[2], "build date:(.+)")
++	return info[1] == "udp2raw-tunnel" and version or "", info[1] == "udp2raw-tunnel" and build or ""
++end
++
++local udp2raw_version, udp2raw_build = get_udp2raw_version("udp2raw")
++-%>
+ 
+ <fieldset class="cbi-section">
+ 	<legend><%:Running Status%></legend>
