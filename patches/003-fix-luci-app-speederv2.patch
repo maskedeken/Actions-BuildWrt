@@ -10,7 +10,7 @@ diff -ur a/package/feeds/luci/luci-app-speederv2/luasrc/view/speederv2/status.ht
 +	return info[1] == "UDPspeeder V2" and version or "", info[1] == "UDPspeeder V2" and build or ""
 +end
 +
-+local speederv2_version, speederv2_build = get_speederv2_version("speederv2")
++local speederv2_version, speederv2_build = get_speederv2_version("udpspeeder")
 +-%>
  
  <fieldset class="cbi-section">
