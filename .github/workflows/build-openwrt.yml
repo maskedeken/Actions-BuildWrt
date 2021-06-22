@@ -1,4 +1,4 @@
-name: Build OpenWrt
+name: Build OpenWrt-21.02
 
 # Controls when the action will run. 
 on:
