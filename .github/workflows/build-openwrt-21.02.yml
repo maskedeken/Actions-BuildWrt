@@ -21,7 +21,9 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@openwrt-21.02
+      uses: actions/checkout@v2
+      with:
+        ref: openwrt-21.02
 
     - name: Initialization environment
       env:
