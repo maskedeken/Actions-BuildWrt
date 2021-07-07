@@ -1,0 +1,36 @@
+diff -ur a/package/feeds/luci/luci-app-udp2raw/Makefile b/package/feeds/luci/luci-app-udp2raw/Makefile
+--- a/package/feeds/luci/luci-app-udp2raw/Makefile	2021-07-07 09:31:19.398913728 +0000
++++ b/package/feeds/luci/luci-app-udp2raw/Makefile	2021-07-07 09:31:54.959344830 +0000
+@@ -9,7 +9,7 @@
+ 
+ LUCI_TITLE:=LuCI Support for udp2raw-tunnel
+ LUCI_DESCRIPTION:=LuCI Support for udp2raw-tunnel.
+-LUCI_DEPENDS:=+udp2raw-tunnel
++LUCI_DEPENDS:=+udp2raw-tunnel +bash +libcap
+ LUCI_PKGARCH:=all
+ 
+ PKG_NAME:=luci-app-udp2raw
+diff -ur a/package/feeds/luci/luci-app-udp2raw/root/etc/init.d/udp2raw b/package/feeds/luci/luci-app-udp2raw/root/etc/init.d/udp2raw
+--- a/package/feeds/luci/luci-app-udp2raw/root/etc/init.d/udp2raw	2021-07-07 09:31:19.398913728 +0000
++++ b/package/feeds/luci/luci-app-udp2raw/root/etc/init.d/udp2raw	2021-07-07 09:38:49.992380958 +0000
+@@ -125,11 +125,17 @@
+ 	fi
+ 
+ 	procd_open_instance
+-	procd_set_param command /usr/bin/udp2raw
+-	procd_append_param command --conf-file "$config_file"
++	if [ -n "$daemon_user" -a "$daemon_user" != root ];then
++		capabilties="cap_net_raw,cap_net_bind_service,cap_net_admin"
++		procd_set_param command /usr/sbin/capsh
++		procd_append_param command --caps="${capabilties}+eip" -- -c "capsh --user='${daemon_user}' --addamb='${capabilties}' -- -c '/usr/bin/udp2raw --conf-file \"$config_file\"'"
++	else
++		procd_set_param command /usr/bin/udp2raw
++		procd_append_param command --conf-file "$config_file"
++	fi
+ 	procd_set_param respawn
+ 	procd_set_param file "$config_file"
+-	[ -n "$daemon_user" ] && procd_set_param user "$daemon_user" && _log "info" "running from ${daemon_user} user"
++	[ -n "$daemon_user" ] && _log "info" "running from ${daemon_user} user"
+ 	procd_set_param pidfile "/var/run/${NAME}.${server}.pid"
+ 	procd_close_instance
+ }
