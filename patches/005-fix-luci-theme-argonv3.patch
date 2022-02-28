@@ -1,0 +1,19 @@
+diff -ur a/package/feeds/luci/luci-theme-argonv3/htdocs/luci-static/argon/js/script.js b/package/feeds/luci/luci-theme-argonv3/htdocs/luci-static/argon/js/script.js
+--- a/package/feeds/luci/luci-theme-argonv3/htdocs/luci-static/argon/js/script.js	2022-02-28 06:43:21.106827046 +0000
++++ b/package/feeds/luci/luci-theme-argonv3/htdocs/luci-static/argon/js/script.js	2022-02-28 06:42:12.757856311 +0000
+@@ -122,15 +122,6 @@
+ 
+ 
+ 
+-// define what element should be observed by the observer
+-// and what types of mutations trigger the callback
+-    if ($("#cbi-dhcp-lan-ignore").length > 0) {
+-        observer.observe(document.getElementById("cbi-dhcp-lan-ignore"), {
+-            subtree: true,
+-            attributes: true
+-        });
+-    }
+-
+     /**
+      * hook menu click and add the hash
+      */
