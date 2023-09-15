@@ -1,0 +1,12 @@
+diff -ur a/package/feeds/luci/luci-app-passwall/Makefile b/package/feeds/luci/luci-app-passwall/Makefile
+--- a/package/feeds/luci/luci-app-passwall/Makefile	2023-09-15 14:55:08.322215575 +0800
++++ b/package/feeds/luci/luci-app-passwall/Makefile	2023-09-15 15:03:32.418847472 +0800
+@@ -36,7 +36,7 @@
+ 	+chinadns-ng +dns2socks +dns2tcp +ip-full +libuci-lua +lua +luci-compat +luci-lib-jsonc \
+ 	+microsocks +resolveip +tcping +unzip \
+ 	+ipset +ipt2socks +kmod-ipt-nat \
+-	+iptables-mod-conntrack-extra +iptables-mod-iprange +iptables-mod-tproxy \
++	+iptables-mod-conntrack-extra +iptables-mod-iprange +iptables-mod-tproxy +iptables-mod-socket \
+ 	+PACKAGE_$(PKG_NAME)_INCLUDE_Brook:brook \
+ 	+PACKAGE_$(PKG_NAME)_INCLUDE_Haproxy:haproxy \
+ 	+PACKAGE_$(PKG_NAME)_INCLUDE_Hysteria:hysteria \
