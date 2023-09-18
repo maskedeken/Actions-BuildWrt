@@ -1,0 +1,12 @@
+diff -ur a/package/openwrt-passwall/luci-app-passwall/root/usr/share/passwall/app.sh b/package/openwrt-passwall/luci-app-passwall/root/usr/share/passwall/app.sh
+--- a/package/openwrt-passwall/luci-app-passwall/root/usr/share/passwall/app.sh	2023-09-18 15:33:54.289897231 +0800
++++ b/package/openwrt-passwall/luci-app-passwall/root/usr/share/passwall/app.sh	2023-09-18 15:34:16.746562333 +0800
+@@ -207,7 +207,7 @@
+ check_depends() {
+ 	local tables=${1}
+ 	if [ "$tables" == "iptables" ]; then
+-		for depends in "iptables-mod-tproxy" "iptables-mod-socket" "iptables-mod-iprange" "iptables-mod-conntrack-extra" "kmod-ipt-nat"; do
++		for depends in "iptables-mod-tproxy" "iptables-mod-iprange" "iptables-mod-conntrack-extra" "kmod-ipt-nat"; do
+ 			[ -z "$(opkg status ${depends} 2>/dev/null | grep 'Status' | awk -F ': ' '{print $2}' 2>/dev/null)" ] && echolog "$tables透明代理基础依赖 $depends 未安装..."
+ 		done
+ 	else
