@@ -1,6 +1,6 @@
 diff -ur a/package/openwrt-passwall/luci-app-passwall/Makefile b/package/openwrt-passwall/luci-app-passwall/Makefile
---- a/package/openwrt-passwall/luci-app-passwall/Makefile	2023-09-19 09:49:23.253274333 +0800
-+++ b/package/openwrt-passwall/luci-app-passwall/Makefile	2023-09-19 10:03:50.293214558 +0800
+--- a/package/openwrt-passwall/luci-app-passwall/Makefile	2023-09-22 11:05:34.743262240 +0800
++++ b/package/openwrt-passwall/luci-app-passwall/Makefile	2023-09-22 11:11:03.853239560 +0800
 @@ -10,8 +10,6 @@
  PKG_RELEASE:=
  
@@ -14,8 +14,8 @@ diff -ur a/package/openwrt-passwall/luci-app-passwall/Makefile b/package/openwrt
  LUCI_DEPENDS:=+coreutils +coreutils-base64 +coreutils-nohup +curl \
  	+chinadns-ng +dns2socks +dns2tcp +ip-full +libuci-lua +lua +luci-compat +luci-lib-jsonc \
  	+microsocks +resolveip +tcping +unzip \
-+	+dnsmasq-full +ipset +ipt2socks \
-+	+iptables-mod-conntrack-extra +iptables-mod-iprange +iptables-mod-tproxy +kmod-ipt-nat \
++	+ipset +ipt2socks +kmod-ipt-nat \
++	+iptables-mod-conntrack-extra +iptables-mod-iprange +iptables-mod-tproxy \
  	+PACKAGE_$(PKG_NAME)_INCLUDE_Brook:brook \
  	+PACKAGE_$(PKG_NAME)_INCLUDE_Haproxy:haproxy \
  	+PACKAGE_$(PKG_NAME)_INCLUDE_Hysteria:hysteria \

@@ -14,8 +14,8 @@ diff -ur a/package/openwrt-passwall2/luci-app-passwall2/Makefile b/package/openw
  	+ip-full +libuci-lua +lua +luci-compat +luci-lib-jsonc +resolveip +tcping \
  	+xray-core +v2ray-geoip +v2ray-geosite \
  	+unzip \
-+	+dnsmasq-full +ipset \
-+	+iptables-mod-conntrack-extra +iptables-mod-iprange +iptables-mod-tproxy +kmod-ipt-nat \
++	+ipset +kmod-ipt-nat \
++	+iptables-mod-conntrack-extra +iptables-mod-iprange +iptables-mod-tproxy \
  	+PACKAGE_$(PKG_NAME)_INCLUDE_Brook:brook \
  	+PACKAGE_$(PKG_NAME)_INCLUDE_Haproxy:haproxy \
  	+PACKAGE_$(PKG_NAME)_INCLUDE_Hysteria:hysteria \
