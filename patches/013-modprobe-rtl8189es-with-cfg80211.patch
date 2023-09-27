@@ -1,0 +1,12 @@
+diff -ur a/package/kernel/rtl8189es/Makefile b/package/kernel/rtl8189es/Makefile
+--- a/package/kernel/rtl8189es/Makefile	2023-09-27 14:04:13.738797568 +0800
++++ b/package/kernel/rtl8189es/Makefile	2023-09-27 14:04:54.215461443 +0800
+@@ -26,7 +26,7 @@
+   TITLE:=Realtek RTL8189ETV SDIO WiFi
+   DEPENDS:=+kmod-cfg80211 +kmod-mmc +@DRIVER_11N_SUPPORT
+   FILES:=$(PKG_BUILD_DIR)/rtl8189es.ko
+-  AUTOLOAD:=$(call AutoProbe,rtl8189es)
++  AUTOLOAD:=$(call AutoProbe,cfg80211 rtl8189es)
+ endef
+ 
+ NOSTDINC_FLAGS:= \
