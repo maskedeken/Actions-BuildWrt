@@ -1,40 +1,31 @@
 diff -ur a/package/openwrt-passwall/luci-app-passwall/Makefile b/package/openwrt-passwall/luci-app-passwall/Makefile
---- a/package/openwrt-passwall/luci-app-passwall/Makefile	2023-09-25 16:36:42.604870806 +0800
-+++ b/package/openwrt-passwall/luci-app-passwall/Makefile	2023-09-25 16:57:52.164783263 +0800
+--- a/package/openwrt-passwall/luci-app-passwall/Makefile	2024-02-25 13:56:00.768813987 +0800
++++ b/package/openwrt-passwall/luci-app-passwall/Makefile	2024-02-25 14:02:11.464287047 +0800
 @@ -10,8 +10,6 @@
  PKG_RELEASE:=
  
  PKG_CONFIG_DEPENDS:= \
 -	CONFIG_PACKAGE_$(PKG_NAME)_Iptables_Transparent_Proxy \
 -	CONFIG_PACKAGE_$(PKG_NAME)_Nftables_Transparent_Proxy \
- 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Brook \
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Haproxy \
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Hysteria \
-@@ -27,6 +25,7 @@
- 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Trojan_GO \
+ 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_NaiveProxy \
+@@ -25,6 +23,7 @@
+ 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_SingBox \
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Trojan_Plus \
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_tuic_client \
 +	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_IPT2Socks \
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Geodata \
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Plugin \
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Xray \
-@@ -37,6 +36,7 @@
+@@ -34,37 +33,12 @@
+ LUCI_PKGARCH:=all
  LUCI_DEPENDS:=+coreutils +coreutils-base64 +coreutils-nohup +curl \
  	+chinadns-ng +dns2socks +dns2tcp +ip-full +libuci-lua +lua +luci-compat +luci-lib-jsonc \
- 	+microsocks +resolveip +tcping +unzip \
-+	+kmod-nft-socket +kmod-nft-tproxy +kmod-nft-nat \
- 	+PACKAGE_$(PKG_NAME)_INCLUDE_Brook:brook \
- 	+PACKAGE_$(PKG_NAME)_INCLUDE_Haproxy:haproxy \
- 	+PACKAGE_$(PKG_NAME)_INCLUDE_Hysteria:hysteria \
-@@ -54,6 +54,7 @@
- 	+PACKAGE_$(PKG_NAME)_INCLUDE_Trojan_GO:trojan-go \
- 	+PACKAGE_$(PKG_NAME)_INCLUDE_Trojan_Plus:trojan-plus \
- 	+PACKAGE_$(PKG_NAME)_INCLUDE_tuic_client:tuic-client \
-+	+PACKAGE_$(PKG_NAME)_INCLUDE_IPT2Socks:ipt2socks \
- 	+PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Geodata:v2ray-geoip \
- 	+PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Geodata:v2ray-geosite \
- 	+PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Plugin:v2ray-plugin \
-@@ -63,32 +64,6 @@
+-	+microsocks +resolveip +tcping +unzip
++	+microsocks +resolveip +tcping +unzip \
++	+kmod-nft-socket +kmod-nft-tproxy +kmod-nft-nat
+ 
  define Package/$(PKG_NAME)/config
  menu "Configuration"
  
@@ -64,17 +55,18 @@ diff -ur a/package/openwrt-passwall/luci-app-passwall/Makefile b/package/openwrt
 -	depends on PACKAGE_$(PKG_NAME)
 -	default y if PACKAGE_firewall4
 -
- config PACKAGE_$(PKG_NAME)_INCLUDE_Brook
- 	bool "Include Brook"
- 	default n
-@@ -153,6 +128,10 @@
- 	depends on aarch64||arm||i386||x86_64
+ config PACKAGE_$(PKG_NAME)_INCLUDE_Haproxy
+ 	bool "Include Haproxy"
+ 	select PACKAGE_haproxy
+@@ -136,6 +110,11 @@
+ 	select PACKAGE_tuic-client
  	default n
  
 +config PACKAGE_$(PKG_NAME)_INCLUDE_IPT2Socks
 +	bool "Include IPT2Socks"
++	select PACKAGE_ipt2socks
 +	default y
 +
  config PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Geodata
  	bool "Include V2ray_Geodata"
- 	default n
+ 	select PACKAGE_v2ray-geoip
