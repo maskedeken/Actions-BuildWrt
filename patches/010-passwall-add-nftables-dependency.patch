@@ -1,6 +1,6 @@
 diff -ur a/package/openwrt-passwall/luci-app-passwall/Makefile b/package/openwrt-passwall/luci-app-passwall/Makefile
---- a/package/openwrt-passwall/luci-app-passwall/Makefile	2024-02-25 13:56:00.768813987 +0800
-+++ b/package/openwrt-passwall/luci-app-passwall/Makefile	2024-02-25 14:02:11.464287047 +0800
+--- a/package/openwrt-passwall/luci-app-passwall/Makefile	2024-02-27 20:50:28.473843584 +0800
++++ b/package/openwrt-passwall/luci-app-passwall/Makefile	2024-02-27 20:55:01.009599852 +0800
 @@ -10,8 +10,6 @@
  PKG_RELEASE:=
  
@@ -18,7 +18,7 @@ diff -ur a/package/openwrt-passwall/luci-app-passwall/Makefile b/package/openwrt
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Geodata \
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Plugin \
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Xray \
-@@ -34,37 +33,12 @@
+@@ -34,40 +33,17 @@
  LUCI_PKGARCH:=all
  LUCI_DEPENDS:=+coreutils +coreutils-base64 +coreutils-nohup +curl \
  	+chinadns-ng +dns2socks +dns2tcp +ip-full +libuci-lua +lua +luci-compat +luci-lib-jsonc \
@@ -28,6 +28,7 @@ diff -ur a/package/openwrt-passwall/luci-app-passwall/Makefile b/package/openwrt
  
  define Package/$(PKG_NAME)/config
  menu "Configuration"
+ 	depends on PACKAGE_$(PKG_NAME)
  
 -config PACKAGE_$(PKG_NAME)_Iptables_Transparent_Proxy
 -	bool "Iptables Transparent Proxy"
@@ -41,7 +42,6 @@ diff -ur a/package/openwrt-passwall/luci-app-passwall/Makefile b/package/openwrt
 -	select PACKAGE_iptables-mod-socket
 -	select PACKAGE_iptables-mod-tproxy
 -	select PACKAGE_kmod-ipt-nat
--	depends on PACKAGE_$(PKG_NAME)
 -	default y if ! PACKAGE_firewall4
 -
 -config PACKAGE_$(PKG_NAME)_Nftables_Transparent_Proxy
@@ -52,21 +52,92 @@ diff -ur a/package/openwrt-passwall/luci-app-passwall/Makefile b/package/openwrt
 -	select PACKAGE_kmod-nft-socket
 -	select PACKAGE_kmod-nft-tproxy
 -	select PACKAGE_kmod-nft-nat
--	depends on PACKAGE_$(PKG_NAME)
 -	default y if PACKAGE_firewall4
 -
  config PACKAGE_$(PKG_NAME)_INCLUDE_Haproxy
  	bool "Include Haproxy"
  	select PACKAGE_haproxy
-@@ -136,6 +110,11 @@
+-	default y if aarch64||arm||i386||x86_64
++	default n
+ 
+ config PACKAGE_$(PKG_NAME)_INCLUDE_Hysteria
+ 	bool "Include Hysteria"
+@@ -84,18 +60,18 @@
+ 	bool "Include Shadowsocks Libev Client"
+ 	select PACKAGE_shadowsocks-libev-ss-local
+ 	select PACKAGE_shadowsocks-libev-ss-redir
+-	default y
++	default n
+ 
+ config PACKAGE_$(PKG_NAME)_INCLUDE_Shadowsocks_Libev_Server
+ 	bool "Include Shadowsocks Libev Server"
+ 	select PACKAGE_shadowsocks-libev-ss-server
+-	default y if aarch64||arm||i386||x86_64
++	default n
+ 
+ config PACKAGE_$(PKG_NAME)_INCLUDE_Shadowsocks_Rust_Client
+ 	bool "Include Shadowsocks Rust Client"
+ 	depends on aarch64||arm||i386||mips||mipsel||x86_64
+ 	select PACKAGE_shadowsocks-rust-sslocal
+-	default y if aarch64
++	default n
+ 
+ config PACKAGE_$(PKG_NAME)_INCLUDE_Shadowsocks_Rust_Server
+ 	bool "Include Shadowsocks Rust Server"
+@@ -107,7 +83,7 @@
+ 	bool "Include ShadowsocksR Libev Client"
+ 	select PACKAGE_shadowsocksr-libev-ssr-local
+ 	select PACKAGE_shadowsocksr-libev-ssr-redir
+-	default y
++	default n
+ 
+ config PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_Libev_Server
+ 	bool "Include ShadowsocksR Libev Server"
+@@ -117,17 +93,17 @@
+ config PACKAGE_$(PKG_NAME)_INCLUDE_Simple_Obfs
+ 	bool "Include Simple-Obfs (Shadowsocks Plugin)"
+ 	select PACKAGE_simple-obfs
+-	default y
++	default n
+ 
+ config PACKAGE_$(PKG_NAME)_INCLUDE_SingBox
+ 	bool "Include Sing-Box"
+ 	select PACKAGE_sing-box
+-	default y if aarch64||arm||i386||x86_64
++	default n
+ 
+ config PACKAGE_$(PKG_NAME)_INCLUDE_Trojan_Plus
+ 	bool "Include Trojan-Plus"
+ 	select PACKAGE_trojan-plus
+-	default y
++	default n
+ 
+ config PACKAGE_$(PKG_NAME)_INCLUDE_tuic_client
+ 	bool "Include tuic-client"
+@@ -135,6 +111,11 @@
  	select PACKAGE_tuic-client
  	default n
  
 +config PACKAGE_$(PKG_NAME)_INCLUDE_IPT2Socks
 +	bool "Include IPT2Socks"
 +	select PACKAGE_ipt2socks
-+	default y
++	default n
 +
  config PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Geodata
  	bool "Include V2ray_Geodata"
  	select PACKAGE_v2ray-geoip
+@@ -144,12 +125,12 @@
+ config PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Plugin
+ 	bool "Include V2ray-Plugin (Shadowsocks Plugin)"
+ 	select PACKAGE_v2ray-plugin
+-	default y if aarch64||arm||i386||x86_64
++	default n
+ 
+ config PACKAGE_$(PKG_NAME)_INCLUDE_Xray
+ 	bool "Include Xray"
+ 	select PACKAGE_xray-core
+-	default y if aarch64||arm||i386||x86_64
++	default n
+ 
+ config PACKAGE_$(PKG_NAME)_INCLUDE_Xray_Plugin
+ 	bool "Include Xray-Plugin (Shadowsocks Plugin)"
