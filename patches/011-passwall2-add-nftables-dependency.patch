@@ -1,16 +1,19 @@
 diff -ur a/package/openwrt-passwall2/luci-app-passwall2/Makefile b/package/openwrt-passwall2/luci-app-passwall2/Makefile
---- a/package/openwrt-passwall2/luci-app-passwall2/Makefile	2024-02-27 20:58:16.659321506 +0800
-+++ b/package/openwrt-passwall2/luci-app-passwall2/Makefile	2024-02-27 21:00:14.702374254 +0800
-@@ -9,8 +9,6 @@
+--- a/package/openwrt-passwall2/luci-app-passwall2/Makefile	2024-05-05 13:57:28.345105813 +0800
++++ b/package/openwrt-passwall2/luci-app-passwall2/Makefile	2024-05-05 14:16:35.621813823 +0800
+@@ -9,11 +9,8 @@
  PKG_RELEASE:=
  
  PKG_CONFIG_DEPENDS:= \
 -	CONFIG_PACKAGE_$(PKG_NAME)_Iptables_Transparent_Proxy \
 -	CONFIG_PACKAGE_$(PKG_NAME)_Nftables_Transparent_Proxy \
- 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Brook \
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Haproxy \
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Hysteria \
-@@ -25,14 +23,15 @@
+-	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_IPv6_Nat \
+ 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_NaiveProxy \
+ 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Shadowsocks_Libev_Client \
+ 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Shadowsocks_Libev_Server \
+@@ -24,55 +21,25 @@
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Simple_Obfs \
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_SingBox \
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_tuic_client \
@@ -24,22 +27,19 @@ diff -ur a/package/openwrt-passwall2/luci-app-passwall2/Makefile b/package/openw
 -	+ip-full +libuci-lua +lua +luci-compat +luci-lib-jsonc +resolveip +tcping \
 -	+xray-core +v2ray-geoip +v2ray-geosite \
 -	+unzip \
+-	+PACKAGE_$(PKG_NAME)_INCLUDE_IPv6_Nat:ip6tables-mod-nat
 +	+ip-full +libuci-lua +lua +luci-compat +luci-lib-jsonc +resolveip +tcping +unzip \
-+	+kmod-nft-socket +kmod-nft-tproxy +kmod-nft-nat \
- 	+PACKAGE_$(PKG_NAME)_INCLUDE_Brook:brook \
- 	+PACKAGE_$(PKG_NAME)_INCLUDE_Haproxy:haproxy \
- 	+PACKAGE_$(PKG_NAME)_INCLUDE_Hysteria:hysteria \
-@@ -49,45 +48,21 @@
- 	+PACKAGE_$(PKG_NAME)_INCLUDE_Simple_Obfs:simple-obfs \
- 	+PACKAGE_$(PKG_NAME)_INCLUDE_SingBox:sing-box \
- 	+PACKAGE_$(PKG_NAME)_INCLUDE_tuic_client:tuic-client \
-+	+PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Geodata:v2ray-geoip \
-+	+PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Geodata:v2ray-geosite \
-+	+PACKAGE_$(PKG_NAME)_INCLUDE_Xray:xray-core \
- 	+PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Plugin:v2ray-plugin
++	+kmod-nft-socket +kmod-nft-tproxy +kmod-nft-nat
  
  define Package/$(PKG_NAME)/config
  menu "Configuration"
+ 
+-config PACKAGE_$(PKG_NAME)_INCLUDE_IPv6_Nat
+-	depends on PACKAGE_ip6tables
+-	bool "Include IPv6 Nat"
+-	default n
+-
+ if PACKAGE_$(PKG_NAME)
  
 -config PACKAGE_$(PKG_NAME)_Iptables_Transparent_Proxy
 -	bool "Iptables Transparent Proxy"
@@ -54,9 +54,8 @@ diff -ur a/package/openwrt-passwall2/luci-app-passwall2/Makefile b/package/openw
 -	select PACKAGE_iptables-mod-socket
 -	select PACKAGE_iptables-mod-tproxy
 -	select PACKAGE_kmod-ipt-nat
--	depends on PACKAGE_$(PKG_NAME)
 -	default y if ! PACKAGE_firewall4
--	
+-
 -config PACKAGE_$(PKG_NAME)_Nftables_Transparent_Proxy
 -	bool "Nftables Transparent Proxy"
 -	select PACKAGE_dnsmasq-full
@@ -65,76 +64,79 @@ diff -ur a/package/openwrt-passwall2/luci-app-passwall2/Makefile b/package/openw
 -	select PACKAGE_kmod-nft-socket
 -	select PACKAGE_kmod-nft-tproxy
 -	select PACKAGE_kmod-nft-nat
--	depends on PACKAGE_$(PKG_NAME)
 -	default y if PACKAGE_firewall4
 -
- config PACKAGE_$(PKG_NAME)_INCLUDE_Brook
- 	bool "Include Brook"
- 	default n
- 
  config PACKAGE_$(PKG_NAME)_INCLUDE_Haproxy
  	bool "Include Haproxy"
+ 	select PACKAGE_haproxy
 -	default y if aarch64||arm||i386||x86_64
 +	default n
  
  config PACKAGE_$(PKG_NAME)_INCLUDE_Hysteria
  	bool "Include Hysteria"
-@@ -105,7 +80,7 @@
- 
- config PACKAGE_$(PKG_NAME)_INCLUDE_Shadowsocks_Libev_Client
+@@ -89,7 +56,7 @@
  	bool "Include Shadowsocks Libev Client"
+ 	select PACKAGE_shadowsocks-libev-ss-local
+ 	select PACKAGE_shadowsocks-libev-ss-redir
 -	default y
 +	default n
  
  config PACKAGE_$(PKG_NAME)_INCLUDE_Shadowsocks_Libev_Server
  	bool "Include Shadowsocks Libev Server"
-@@ -114,7 +89,7 @@
- config PACKAGE_$(PKG_NAME)_INCLUDE_Shadowsocks_Rust_Client
+@@ -100,7 +67,7 @@
  	bool "Include Shadowsocks Rust Client"
  	depends on aarch64||arm||i386||mips||mipsel||x86_64
+ 	select PACKAGE_shadowsocks-rust-sslocal
 -	default y if aarch64
 +	default n
  
  config PACKAGE_$(PKG_NAME)_INCLUDE_Shadowsocks_Rust_Server
  	bool "Include Shadowsocks Rust Server"
-@@ -123,7 +98,7 @@
- 
- config PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_Libev_Client
+@@ -112,7 +79,7 @@
  	bool "Include ShadowsocksR Libev Client"
+ 	select PACKAGE_shadowsocksr-libev-ssr-local
+ 	select PACKAGE_shadowsocksr-libev-ssr-redir
 -	default y
 +	default n
  
  config PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_Libev_Server
  	bool "Include ShadowsocksR Libev Server"
-@@ -131,20 +106,28 @@
- 
+@@ -122,12 +89,12 @@
  config PACKAGE_$(PKG_NAME)_INCLUDE_Simple_Obfs
  	bool "Include Simple-Obfs (Shadowsocks Plugin)"
+ 	select PACKAGE_simple-obfs
 -	default y
 +	default n
  
  config PACKAGE_$(PKG_NAME)_INCLUDE_SingBox
  	bool "Include Sing-Box"
+ 	select PACKAGE_sing-box
 -	default y if aarch64||arm||i386||x86_64
 +	default n
  
  config PACKAGE_$(PKG_NAME)_INCLUDE_tuic_client
  	bool "Include tuic-client"
- 	depends on aarch64||arm||i386||x86_64
+@@ -135,10 +102,22 @@
+ 	select PACKAGE_tuic-client
  	default n
  
++
 +config PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Geodata
 +	bool "Include V2ray_Geodata"
++	select PACKAGE_v2ray-geoip
++	select PACKAGE_v2ray-geosite
 +	default n
 +
 +config PACKAGE_$(PKG_NAME)_INCLUDE_Xray
 +	bool "Include Xray"
++	select PACKAGE_xray-core
 +	default n
 +
  config PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Plugin
  	bool "Include V2ray-Plugin (Shadowsocks Plugin)"
+ 	select PACKAGE_v2ray-plugin
 -	default y if aarch64||arm||i386||x86_64
 +	default n
  
+ endif
  endmenu
- endef

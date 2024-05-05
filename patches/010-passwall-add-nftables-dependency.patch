@@ -1,6 +1,6 @@
 diff -ur a/package/openwrt-passwall/luci-app-passwall/Makefile b/package/openwrt-passwall/luci-app-passwall/Makefile
---- a/package/openwrt-passwall/luci-app-passwall/Makefile	2024-02-27 20:50:28.473843584 +0800
-+++ b/package/openwrt-passwall/luci-app-passwall/Makefile	2024-02-27 20:55:01.009599852 +0800
+--- a/package/openwrt-passwall/luci-app-passwall/Makefile	2024-05-05 13:32:31.035051878 +0800
++++ b/package/openwrt-passwall/luci-app-passwall/Makefile	2024-05-05 13:31:31.985049734 +0800
 @@ -10,8 +10,6 @@
  PKG_RELEASE:=
  
@@ -10,20 +10,12 @@ diff -ur a/package/openwrt-passwall/luci-app-passwall/Makefile b/package/openwrt
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Haproxy \
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Hysteria \
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_NaiveProxy \
-@@ -25,6 +23,7 @@
- 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_SingBox \
- 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Trojan_Plus \
- 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_tuic_client \
-+	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_IPT2Socks \
- 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Geodata \
- 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Plugin \
- 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_Xray \
-@@ -34,40 +33,17 @@
- LUCI_PKGARCH:=all
+@@ -35,38 +33,17 @@
  LUCI_DEPENDS:=+coreutils +coreutils-base64 +coreutils-nohup +curl \
- 	+chinadns-ng +dns2socks +dns2tcp +ip-full +libuci-lua +lua +luci-compat +luci-lib-jsonc \
--	+microsocks +resolveip +tcping +unzip
-+	+microsocks +resolveip +tcping +unzip \
+ 	+chinadns-ng +dns2socks +dns2tcp +dnsmasq-full +ip-full \
+ 	+libuci-lua +lua +luci-compat +luci-lib-jsonc \
+-	+microsocks +resolveip +tcping
++	+microsocks +resolveip +tcping +ipt2socks \
 +	+kmod-nft-socket +kmod-nft-tproxy +kmod-nft-nat
  
  define Package/$(PKG_NAME)/config
@@ -32,7 +24,6 @@ diff -ur a/package/openwrt-passwall/luci-app-passwall/Makefile b/package/openwrt
  
 -config PACKAGE_$(PKG_NAME)_Iptables_Transparent_Proxy
 -	bool "Iptables Transparent Proxy"
--	select PACKAGE_dnsmasq-full
 -	select PACKAGE_ipset
 -	select PACKAGE_ipt2socks
 -	select PACKAGE_iptables
@@ -46,7 +37,6 @@ diff -ur a/package/openwrt-passwall/luci-app-passwall/Makefile b/package/openwrt
 -
 -config PACKAGE_$(PKG_NAME)_Nftables_Transparent_Proxy
 -	bool "Nftables Transparent Proxy"
--	select PACKAGE_dnsmasq-full
 -	select PACKAGE_ipt2socks
 -	select PACKAGE_nftables
 -	select PACKAGE_kmod-nft-socket
@@ -62,7 +52,7 @@ diff -ur a/package/openwrt-passwall/luci-app-passwall/Makefile b/package/openwrt
  
  config PACKAGE_$(PKG_NAME)_INCLUDE_Hysteria
  	bool "Include Hysteria"
-@@ -84,18 +60,18 @@
+@@ -83,18 +60,18 @@
  	bool "Include Shadowsocks Libev Client"
  	select PACKAGE_shadowsocks-libev-ss-local
  	select PACKAGE_shadowsocks-libev-ss-redir
@@ -84,7 +74,7 @@ diff -ur a/package/openwrt-passwall/luci-app-passwall/Makefile b/package/openwrt
  
  config PACKAGE_$(PKG_NAME)_INCLUDE_Shadowsocks_Rust_Server
  	bool "Include Shadowsocks Rust Server"
-@@ -107,7 +83,7 @@
+@@ -106,7 +83,7 @@
  	bool "Include ShadowsocksR Libev Client"
  	select PACKAGE_shadowsocksr-libev-ssr-local
  	select PACKAGE_shadowsocksr-libev-ssr-redir
@@ -93,7 +83,7 @@ diff -ur a/package/openwrt-passwall/luci-app-passwall/Makefile b/package/openwrt
  
  config PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_Libev_Server
  	bool "Include ShadowsocksR Libev Server"
-@@ -117,17 +93,17 @@
+@@ -116,17 +93,17 @@
  config PACKAGE_$(PKG_NAME)_INCLUDE_Simple_Obfs
  	bool "Include Simple-Obfs (Shadowsocks Plugin)"
  	select PACKAGE_simple-obfs
@@ -114,19 +104,7 @@ diff -ur a/package/openwrt-passwall/luci-app-passwall/Makefile b/package/openwrt
  
  config PACKAGE_$(PKG_NAME)_INCLUDE_tuic_client
  	bool "Include tuic-client"
-@@ -135,6 +111,11 @@
- 	select PACKAGE_tuic-client
- 	default n
- 
-+config PACKAGE_$(PKG_NAME)_INCLUDE_IPT2Socks
-+	bool "Include IPT2Socks"
-+	select PACKAGE_ipt2socks
-+	default n
-+
- config PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Geodata
- 	bool "Include V2ray_Geodata"
- 	select PACKAGE_v2ray-geoip
-@@ -144,12 +125,12 @@
+@@ -143,13 +120,13 @@
  config PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_Plugin
  	bool "Include V2ray-Plugin (Shadowsocks Plugin)"
  	select PACKAGE_v2ray-plugin
@@ -136,6 +114,7 @@ diff -ur a/package/openwrt-passwall/luci-app-passwall/Makefile b/package/openwrt
  config PACKAGE_$(PKG_NAME)_INCLUDE_Xray
  	bool "Include Xray"
  	select PACKAGE_xray-core
+ 	select PACKAGE_unzip
 -	default y if aarch64||arm||i386||x86_64
 +	default n
  
