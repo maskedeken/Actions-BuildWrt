@@ -57,8 +57,8 @@ jobs:
     - name: Clone passwall and passwall2
       run: |
         cd openwrt
-        git clone https://github.com/xiaorouji/openwrt-passwall -b 25.1.15-1 package/openwrt-passwall
-        git clone https://github.com/xiaorouji/openwrt-passwall2 -b 25.1.8-1 package/openwrt-passwall2
+        git clone https://github.com/xiaorouji/openwrt-passwall -b 25.5.16-1 package/openwrt-passwall
+        git clone https://github.com/xiaorouji/openwrt-passwall2 -b 25.5.15-1 package/openwrt-passwall2
 
     - name: Load custom configuration and patch
       run: |
