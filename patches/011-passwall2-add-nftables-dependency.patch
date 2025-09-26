@@ -23,7 +23,7 @@ index 501d071..54d0334 100644
 -	+unzip \
 -	+PACKAGE_$(PKG_NAME)_INCLUDE_IPv6_Nat:ip6tables-mod-nat
 +	+ip-full +libuci-lua +lua +luci-compat +luci-lib-jsonc +resolveip +tcping +unzip \
-+	+geoview +chinadns-ng +dnsmasq-full +dnsmasq_full_nftset \
++	+geoview +chinadns-ng +dnsmasq-full \
 +	+kmod-nft-socket +kmod-nft-tproxy +kmod-nft-nat
  
  define Package/$(PKG_NAME)/config
