@@ -51,14 +51,15 @@ jobs:
     - name: Install feeds
       run: cd openwrt && ./scripts/feeds install -a
 
-    - name: Remove old luci-app-passwall
-      run: cd openwrt && ./scripts/feeds uninstall luci-app-passwall luci-app-passwall2
+    - name: Remove old packages
+      run: cd openwrt && ./scripts/feeds uninstall luci-app-passwall luci-app-passwall2 geoview chinadns-ng
 
-    - name: Clone passwall and passwall2
+    - name: Clone new packages
       run: |
         cd openwrt
-        git clone https://github.com/xiaorouji/openwrt-passwall -b 25.5.16-1 package/openwrt-passwall
-        git clone https://github.com/xiaorouji/openwrt-passwall2 -b 25.5.15-1 package/openwrt-passwall2
+        git clone https://github.com/xiaorouji/openwrt-passwall -b 25.9.23-1 package/openwrt-passwall
+        git clone https://github.com/xiaorouji/openwrt-passwall2 -b 25.9.24-1 package/openwrt-passwall2
+        git clone https://github.com/xiaorouji/openwrt-passwall-packages package/openwrt-passwall-packages
 
     - name: Load custom configuration and patch
       run: |
