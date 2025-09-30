@@ -60,6 +60,7 @@ jobs:
         git clone https://github.com/xiaorouji/openwrt-passwall -b 25.9.23-1 package/openwrt-passwall
         git clone https://github.com/xiaorouji/openwrt-passwall2 -b 25.9.24-1 package/openwrt-passwall2
         git clone https://github.com/xiaorouji/openwrt-passwall-packages package/openwrt-passwall-packages
+        git clone https://github.com/ophub/luci-app-amlogic package/luci-app-amlogic
 
     - name: Load custom configuration and patch
       run: |
